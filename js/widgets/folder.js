@@ -46,7 +46,7 @@
       }, h('span', { class: 'link-ico', html: SP.icon('plus', 20) }), h('span', { class: 'folder-name', text: 'Agregar' }));
 
       const draw = () => {
-        grid.replaceChildren(...d.links.map(tile), SP.store.state.locked ? null : addTile);
+        grid.replaceChildren(...d.links.map(tile), ...(SP.store.state.locked ? [] : [addTile]));
         if (!d.links.length) grid.prepend(h('p', { class: 'folder-empty', text: 'Soltá accesos directos acá' }));
       };
 

@@ -1760,3 +1760,26 @@ textarea.set-input, .field textarea { font-family: var(--font); }
   .note.settling, .drop-ghost, #selbar, .palette { transition: none !important; }
 }
 .lite .note.enter, .lite .note.board-in, .lite .ascii-pre.fx-rainbow, .lite .ascii-pre.fx-crt, .lite .ascii-pre.fx-amber { animation: none; }
+
+/* Noticias: elegir fuentes */
+.rss-setup { display: flex; flex-direction: column; gap: 8px; height: 100%; min-height: 0; }
+.rss-msg.error { color: var(--danger); opacity: 1; font-weight: 700; line-height: 1.4; }
+.rss-topics { display: flex; flex-wrap: wrap; gap: 4px; flex: none; }
+.rss-topics .chip { padding: 4px 9px; font-size: 11.5px; }
+.rss-topics .chip { flex: none; white-space: nowrap; }
+.chip.on { background: var(--note-ink); color: var(--note-bg); }
+.rss-sources { flex: 1; min-height: 60px; overflow: auto; display: flex; flex-direction: column; gap: 2px; }
+.rss-src {
+  display: flex; align-items: center; gap: 8px;
+  border: 0; background: transparent; color: inherit; text-align: left;
+  padding: 5px 6px; border-radius: 8px; font-size: 13px; font-weight: 600;
+}
+.rss-src:hover { background: var(--ink-06); }
+.rss-src-check { flex: none; width: 16px; height: 16px; border-radius: 5px; border: 1.6px solid var(--ink-55); display: grid; place-items: center; }
+.rss-src.on .rss-src-check { background: var(--note-ink); border-color: var(--note-ink); color: var(--note-bg); }
+.rss-src.on { font-weight: 800; }
+.rss-custom { display: flex; flex-wrap: wrap; gap: 5px; }
+.rss-custom:empty { display: none; }
+.rss-setup-foot { display: flex; justify-content: flex-end; gap: 6px; flex: none; }
+.rss-failed { flex: none; font-size: 11px; opacity: .6; font-weight: 700; }
+.rss-failed .linkish { font-size: inherit; color: inherit; }
