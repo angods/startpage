@@ -1783,3 +1783,28 @@ textarea.set-input, .field textarea { font-family: var(--font); }
 .rss-setup-foot { display: flex; justify-content: flex-end; gap: 6px; flex: none; }
 .rss-failed { flex: none; font-size: 11px; opacity: .6; font-weight: 700; }
 .rss-failed .linkish { font-size: inherit; color: inherit; }
+
+/* Wikipedia al azar */
+.note-body.wiki-body { display: flex; flex-direction: column; gap: 8px; padding: 0 12px 10px; }
+.wiki-img { display: block; flex: 0 1 45%; min-height: 60px; margin: 0 -2px; border-radius: 12px; overflow: hidden; background: var(--ink-06); }
+.wiki-img img { display: block; width: 100%; height: 100%; object-fit: cover; animation: img-in .5s ease; transition: transform .4s ease; }
+.wiki-img:hover img { transform: scale(1.03); }
+.wiki-text { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 3px; }
+.wiki-title { font-family: var(--font-display); font-size: 19px; font-weight: 600; line-height: 1.2; color: inherit; text-decoration: none; }
+.wiki-title:hover { text-decoration: underline; text-underline-offset: 3px; }
+.wiki-desc { font-size: 11.5px; font-weight: 800; opacity: .6; letter-spacing: .02em; }
+.wiki-extract { margin: 4px 0 0; font-size: 13.5px; line-height: 1.5; opacity: .9; }
+.wiki-foot { flex: none; display: flex; align-items: center; gap: 4px; }
+.wiki-btn { width: 26px; height: 26px; border: 0; border-radius: 8px; display: grid; place-items: center; background: var(--ink-10); color: inherit; }
+.wiki-btn:hover:not(:disabled) { background: var(--ink-16); }
+.wiki-btn:disabled { opacity: .3; }
+.wiki-when { flex: 1; min-width: 0; font-size: 11px; font-weight: 700; opacity: .55; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 4px; }
+.wiki-read { font-size: 12px; font-weight: 800; color: inherit; padding: 4px 10px; border-radius: 999px; background: var(--ink-10); text-decoration: none; }
+.wiki-read:hover { background: var(--ink-16); }
+.wiki-body.loading .wiki-btn[aria-label^="Otro"] svg { animation: spin .8s linear infinite; }
+.wiki-body.loading .wiki-text, .wiki-body.loading .wiki-img { opacity: .5; transition: opacity .2s; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.wiki-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; font-size: 13px; }
+.wiki-empty p { margin: 0; opacity: .7; }
+.wiki-logo { font-family: 'Linux Libertine', Georgia, 'Times New Roman', serif; font-size: 44px; line-height: 1; opacity: .7; }
+@container (max-height: 300px) { .wiki-img { display: none; } }

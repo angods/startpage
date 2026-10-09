@@ -16,6 +16,7 @@ Sin frameworks, sin build, sin dependencias: HTML + CSS + JavaScript puro.
 | 🔗 **Accesos** · 📁 **Carpetas** | Mini sticky notes con el ícono de la página. Soltá un acceso sobre una carpeta para guardarlo; arrastralo afuera para sacarlo |
 | 🕐 **Reloj** · 📅 **Calendario** · ⏳ **Cuenta regresiva** | Agenda con eventos (y cumpleaños que se repiten), importa `.ics`; cuenta regresiva con anillo de progreso |
 | ⏱️ **Pomodoro** · 🔥 **Hábitos** | Pomodoro completo (8 alarmas, tic-tac, notificación) y rachas diarias de hábitos |
+| 📚 **Wikipedia** | Un artículo al azar con su imagen principal, en el idioma que elijas (22 idiomas), que cambia solo cada 10 min, 30 min, 1 h, 6 h o 1 día (o a mano). Botones para el anterior y otro al azar |
 | ☁️ **Clima** · 📰 **Noticias (RSS)** · 💵 **Cotizaciones** · 🔁 **Conversor** | Pronóstico de 5 días; titulares de más de 90 fuentes por tema (World, Business, Tech, AI & Dev, Science, Health, Climate, Sports, Culture, Long reads y en español), varias juntas en una sola nota; dólar (oficial, blue, MEP…), cripto y monedas; unidades y monedas |
 | 📊 **Planilla** · 🧮 **Calculadora** · 🔍 **Buscador** | Mini Excel con fórmulas, calculadora con 6 skins y buscador con 4 motores |
 | ▶️ **YouTube** · 🎧 **Sonido ambiente** | Videos como nota; lluvia, olas, viento, fuego y ruidos para concentrarse (sintetizados, sin descargar nada) |
@@ -125,6 +126,7 @@ startpage/
 │       ├── habits.js       # Hábitos
 │       ├── rss.js          # Noticias RSS (varios intermediarios, varias fuentes)
 │       ├── rss-sources.js  # Catálogo de fuentes por tema
+│       ├── wikipedia.js    # Wikipedia al azar
 │       ├── rates.js        # Cotizaciones
 │       ├── converter.js    # Conversor
 │       ├── draw.js         # Dibujo
@@ -159,7 +161,7 @@ Y agregalo a la lista `ADD_ITEMS` en `js/app.js` para que aparezca en el menú.
 
 ## 🔒 Privacidad
 
-Todo queda en tu navegador (`localStorage` + `IndexedDB`). Las únicas llamadas externas son las de los widgets que uses: Open-Meteo (clima), Google Favicons (íconos de accesos), BigDataCloud (nombre de tu ciudad si usás *mi ubicación*), Google Fonts / Fontshare (solo las fuentes que elegís), los videos de YouTube/Vimeo que agregues, DolarApi / CoinGecko / ExchangeRate-API (cotizaciones y conversor), los feeds RSS que elijas (si el sitio no deja leerlos directo, se prueban en orden los intermediarios públicos `rss2json.com`, `allorigins.win`, `codetabs.com` y `corsproxy.io`) y GitHub (solo si activás la sincronización; el token queda únicamente en tu navegador y nunca se exporta).
+Todo queda en tu navegador (`localStorage` + `IndexedDB`). Las únicas llamadas externas son las de los widgets que uses: Open-Meteo (clima), Google Favicons (íconos de accesos), BigDataCloud (nombre de tu ciudad si usás *mi ubicación*), Google Fonts / Fontshare (solo las fuentes que elegís), los videos de YouTube/Vimeo que agregues, DolarApi / CoinGecko / ExchangeRate-API (cotizaciones y conversor), los feeds RSS que elijas (si el sitio no deja leerlos directo, se prueban en orden los intermediarios públicos `rss2json.com`, `allorigins.win`, `codetabs.com` y `corsproxy.io`) la API de Wikipedia (artículos al azar) y GitHub (solo si activás la sincronización; el token queda únicamente en tu navegador y nunca se exporta).
 
 ## Licencia
 
