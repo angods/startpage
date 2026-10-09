@@ -6,28 +6,37 @@ Sin frameworks, sin build, sin dependencias: HTML + CSS + JavaScript puro.
 
 ## ✨ Qué trae
 
+### Widgets
+
 | | |
 |---|---|
-| 📝 **Notas** | Texto libre, con opción de letra manuscrita |
-| 🔗 **Accesos directos** | Mini sticky notes con el ícono de la página (favicon automático, emoji o imagen propia) |
-| ☁️ **Clima** | Buscás tu ciudad (o usás tu ubicación); pronóstico de 5 días. Usa [Open-Meteo](https://open-meteo.com), gratis y sin API key |
-| 📊 **Planilla** | Mini Excel: fila de totales Σ, fórmulas `=B2*C2`, `=SUMA(B2:B9)`, `PROMEDIO`, `MIN`, `MAX`, `CONTAR`, `REDONDEAR`, `ABS` |
-| ⏱️ **Pomodoro** | Tiempos editables (⚙ o clic en el número), 8 alarmas, tic-tac opcional, cuenta regresiva 3-2-1, volumen, silencio y notificación; sigue corriendo si recargás |
-| ▶️ **YouTube** | Cualquier video, short o lista como nota |
-| 🧮 **Calculadora** | 6 skins: Cristal, iOS oscuro, Retro LCD, Neón, Pastel y Papel. Funciona con el teclado |
-| ✅ **Tareas**, 🕐 **Reloj**, 🔍 **Buscador** | Extras para completar el escritorio |
+| 📝 **Notas** · **Markdown** · ✅ **Tareas** | Texto libre (con letra manuscrita opcional), Markdown con tareas `[ ]` clickeables, y listas con festejo al terminar |
+| 🖥️ **ASCII art** | Galería, editor, **texto → letras grandes** (5 estilos), **imagen → ASCII** (caracteres, bloques o braille) y efectos: monitor verde, ámbar, neón, arcoíris, hielo. El tamaño se ajusta solo a la nota |
+| ✏️ **Dibujo** · 🖼️ **Imágenes** | Pizarra a mano alzada (trazos vectoriales) y fotos o galerías con pase automático |
+| 🔗 **Accesos** · 📁 **Carpetas** | Mini sticky notes con el ícono de la página. Soltá un acceso sobre una carpeta para guardarlo; arrastralo afuera para sacarlo |
+| 🕐 **Reloj** · 📅 **Calendario** · ⏳ **Cuenta regresiva** | Agenda con eventos (y cumpleaños que se repiten), importa `.ics`; cuenta regresiva con anillo de progreso |
+| ⏱️ **Pomodoro** · 🔥 **Hábitos** | Pomodoro completo (8 alarmas, tic-tac, notificación) y rachas diarias de hábitos |
+| ☁️ **Clima** · 📰 **Noticias (RSS)** · 💵 **Cotizaciones** · 🔁 **Conversor** | Pronóstico de 5 días; titulares de cualquier sitio; dólar (oficial, blue, MEP…), cripto y monedas; unidades y monedas |
+| 📊 **Planilla** · 🧮 **Calculadora** · 🔍 **Buscador** | Mini Excel con fórmulas, calculadora con 6 skins y buscador con 4 motores |
+| ▶️ **YouTube** · 🎧 **Sonido ambiente** | Videos como nota; lluvia, olas, viento, fuego y ruidos para concentrarse (sintetizados, sin descargar nada) |
 
-- **Apilar y ordenar:** clic en una nota la trae al frente; desde el menú `⋯` podés enviarla atrás, duplicarla o borrarla (con *Deshacer*).
-- **Cuadrícula guía:** al mover o redimensionar una nota aparece una cuadrícula y una sombra con el lugar exacto donde va a quedar (se pone roja si pisa otra nota). Al soltarla, se acomoda sola. Se desactiva en *Ajustes → Ajustar a la cuadrícula*.
-- **Candado 🔒:** fija todas las posiciones para que nada se mueva por accidente.
-- **Claro / oscuro:** cambia notas, interfaz y también el video (lo oscurece o aclara con un velo regulable).
-- **Paletas:** Aurora, Atardecer, Océano, Bosque, Sakura y Grafito, más un color de acento a elección.
-- **Brillo (glossy):** de *Mate* a *Liquid glass* (estilo Apple): reflejos en notas, botones e íconos. También podés bajar la opacidad de las notas para que se vea el fondo.
-- **Fuentes:** más de 50 fuentes gratis curadas (Google Fonts y Fontshare: Inter, Geist, Satoshi, Fraunces, Instrument Serif, Clash Display, Caveat, JetBrains Mono…). Una para el texto, otra para títulos/números, y **cada nota puede tener la suya** (menú `⋯` → Fuente). Solo se descargan las que usás.
-- **Modo ligero:** sin desenfoques ni animaciones, para PCs modestas.
-- **Colores de nota:** 9 predefinidos (cada uno con versión clara y oscura) o cualquier color personalizado.
-- **Fondo:** aurora animada por defecto; o un MP4/WebM subido, por URL o desde la carpeta del proyecto; o un **video de YouTube o Vimeo**; o **cualquier página web**. Opcionalmente, uno distinto para cada tema. El fondo nunca se queda en pausa: si el navegador lo frena, se reanuda solo.
-- **Copias de seguridad:** exportar / importar tus datos en JSON desde Ajustes.
+### El tablero
+
+- **Varios tableros** (pestañas arriba a la izquierda): Trabajo, Personal, Estudio… Doble clic para renombrar, clic derecho para más opciones, `Alt+1…9` para cambiar.
+- **Deshacer / rehacer** (`Ctrl+Z` / `Ctrl+Shift+Z`) de todo: mover, tamaño, color, borrar, ordenar, carpetas…
+- **Cuadrícula guía:** al mover o redimensionar aparece una cuadrícula y una sombra con el lugar exacto donde va a quedar la nota (roja si pisa otra). Al soltarla, se acomoda sola.
+- **Guías de alineación:** líneas de color cuando un borde o el centro coincide con el de otra nota (y se "imanta").
+- **Selección múltiple:** arrastrá sobre una zona vacía o usá `Shift+clic`. Aparece una barra para alinear, repartir, cambiar color, duplicar o borrar.
+- **Zoom y vista general:** `Ctrl + rueda`, pellizco en pantallas táctiles, o los botones de abajo a la izquierda. `F` muestra todo el tablero.
+- **Paleta de comandos (`Ctrl+K`):** buscá cualquier nota (de cualquier tablero, también por su contenido), agregá widgets, cambiá ajustes o buscá en la web.
+- **Teclado:** `Tab` recorre las notas, flechas para moverlas, `Supr` para borrar, `Ctrl+D` duplicar. `?` muestra todos los atajos.
+- **Ordenar el tablero** automáticamente, **fijar** una nota en su lugar o **plegarla** (doble clic en su barra).
+- **Pegar y soltar:** pegá un enlace (acceso), una imagen (nota de imagen), un texto (nota) o un dibujo ASCII; soltá imágenes, videos (fondo) o links arrastrados desde otra pestaña.
+- **Candado 🔒**, **claro / oscuro**, **paletas**, **brillo glossy**, **opacidad**, **más de 50 fuentes** (cada nota puede tener la suya), **modo ligero** y **9 colores de nota** o uno propio.
+- **Fondo:** aurora animada, MP4/WebM propio, YouTube, Vimeo o cualquier página web (uno distinto para cada tema si querés).
+- **Copias de seguridad** en JSON (incluyen imágenes y dibujos) y **sincronización opcional** entre computadoras con un Gist privado de GitHub.
+- **Instalable y sin conexión** (PWA) cuando la publicás en GitHub Pages.
+- **Animaciones** cuidadas (entrada escalonada, cambio de tablero, inclinación al arrastrar, festejos) que respetan *reducir movimiento* del sistema y el modo ligero.
 
 ## 🚀 Uso
 
@@ -41,12 +50,18 @@ Sin frameworks, sin build, sin dependencias: HTML + CSS + JavaScript puro.
 
 | Tecla | Acción |
 |---|---|
-| `N` | Agregar nota |
-| `L` | Candado (bloquear/desbloquear) |
-| `T` | Tema claro / oscuro |
-| `Ctrl + V` | Pegar un enlace sobre el tablero crea un acceso directo (o una nota de YouTube) |
-| Soltar un `.mp4` | Lo pone de fondo |
-| Doble clic en el título | Renombrar la nota |
+| `Ctrl + K` | Paleta de comandos |
+| `N` | Agregar nota (con buscador) |
+| `Ctrl + Z` / `Ctrl + Shift + Z` | Deshacer / rehacer |
+| Arrastrar en vacío · `Shift + clic` | Elegir varias notas |
+| Flechas · `Supr` · `Ctrl + D` · `Ctrl + A` · `Esc` | Mover · borrar · duplicar · elegir todo · soltar selección |
+| `Alt + 1…9` | Cambiar de tablero |
+| `Ctrl + rueda` · `Ctrl +/−/0` · `F` | Zoom · 100% · ver todo |
+| `L` · `T` · `?` | Candado · tema · ayuda |
+| `Ctrl + V` | Pegar un enlace, una imagen o un texto crea una nota |
+| Soltar un `.mp4` / una imagen | Fondo / nota de imagen |
+| Doble clic en el título · en la barra | Renombrar · plegar |
+| Clic derecho en una nota | Menú de la nota |
 
 ## 🎬 Videos de fondo
 
@@ -83,14 +98,17 @@ startpage/
 │   └── style.css           # Tokens de tema, notas, widgets y paneles
 ├── js/
 │   ├── core.js             # Utilidades, íconos, guardado (localStorage + IndexedDB)
-│   ├── ui.js               # Toasts, menús y diálogos
+│   ├── ui.js               # Toasts, menús, diálogos y festejos
+│   ├── history.js          # Deshacer / rehacer
 │   ├── fonts.js            # Catálogo curado de fuentes y selector
 │   ├── sound.js            # Alarmas y tic-tac sintetizados (Web Audio)
 │   ├── theme.js            # Tema claro/oscuro, paletas y colores de nota
 │   ├── background.js       # Aurora, video, YouTube/Vimeo/página de fondo (sin pausas)
-│   ├── board.js            # Tablero: arrastrar, redimensionar, apilar, candado
+│   ├── board.js            # Tablero: arrastrar, guías, selección, zoom, tableros, teclado
 │   ├── settings.js         # Panel de ajustes, exportar/importar
-│   ├── app.js              # Arranque, menú "Agregar", tablero inicial, atajos
+│   ├── sync.js             # Sincronización opcional con un Gist de GitHub
+│   ├── palette.js          # Paleta de comandos (Ctrl+K)
+│   ├── app.js              # Arranque, menú "Agregar", pestañas, zoom, atajos, pegar/soltar
 │   └── widgets/
 │       ├── basic.js        # Nota, tareas, reloj, buscador
 │       ├── link.js         # Accesos directos
@@ -98,7 +116,21 @@ startpage/
 │       ├── sheet.js        # Planilla con fórmulas
 │       ├── pomodoro.js     # Pomodoro
 │       ├── youtube.js      # YouTube
-│       └── calculator.js   # Calculadora con skins
+│       ├── calculator.js   # Calculadora con skins
+│       ├── ascii.js        # ASCII art (galería, letras grandes, imagen → ASCII)
+│       ├── folder.js       # Carpetas de accesos
+│       ├── markdown.js     # Nota Markdown
+│       ├── calendar.js     # Calendario y agenda (.ics)
+│       ├── countdown.js    # Cuenta regresiva
+│       ├── habits.js       # Hábitos
+│       ├── rss.js          # Noticias RSS
+│       ├── rates.js        # Cotizaciones
+│       ├── converter.js    # Conversor
+│       ├── draw.js         # Dibujo
+│       ├── image.js        # Imágenes
+│       └── ambient.js      # Sonido ambiente
+├── sw.js                   # Service worker (sin conexión)
+├── manifest.webmanifest    # Para instalarla como app
 └── assets/
     ├── icon.svg
     └── videos/             # Poné acá tus videos de fondo
@@ -112,6 +144,7 @@ Creá `js/widgets/mi-widget.js`, sumalo en `index.html` antes de `background.js`
 SP.board.register('mi-widget', {
   label: 'Mi widget', icon: 'note', size: [260, 200], min: [160, 120], color: 'mint',
   create: () => ({ contador: 0 }),          // datos iniciales (se guardan solos)
+  text: (note) => '',                       // opcional: texto para la búsqueda de Ctrl+K
   render(body, note, ctx) {                 // dibuja el contenido
     const b = SP.util.h('button', { text: note.data.contador });
     b.onclick = () => { note.data.contador++; b.textContent = note.data.contador; ctx.save(); };
@@ -125,7 +158,7 @@ Y agregalo a la lista `ADD_ITEMS` en `js/app.js` para que aparezca en el menú.
 
 ## 🔒 Privacidad
 
-Todo queda en tu navegador (`localStorage` + `IndexedDB`). Las únicas llamadas externas son: Open-Meteo (clima), Google Favicons (íconos de accesos), BigDataCloud (nombre de tu ciudad si usás *mi ubicación*), Google Fonts / Fontshare (solo las fuentes que elegís) y los videos de YouTube/Vimeo que agregues.
+Todo queda en tu navegador (`localStorage` + `IndexedDB`). Las únicas llamadas externas son las de los widgets que uses: Open-Meteo (clima), Google Favicons (íconos de accesos), BigDataCloud (nombre de tu ciudad si usás *mi ubicación*), Google Fonts / Fontshare (solo las fuentes que elegís), los videos de YouTube/Vimeo que agregues, DolarApi / CoinGecko / ExchangeRate-API (cotizaciones y conversor), los feeds RSS que elijas (si el sitio no lo permite directo, se leen a través de `allorigins.win`) y GitHub (solo si activás la sincronización; el token queda únicamente en tu navegador y nunca se exporta).
 
 ## Licencia
 

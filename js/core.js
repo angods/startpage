@@ -25,7 +25,11 @@ window.SP = window.SP || {};
         for (const [k, v] of Object.entries(attrs)) {
           if (v == null || v === false) continue;
           if (k === 'class') el.className = v;
-          else if (k === 'style' && typeof v === 'object') Object.assign(el.style, v);
+          else if (k === 'style' && typeof v === 'object') {
+            for (const [sk, sv] of Object.entries(v)) {
+              if (sk.startsWith('--')) el.style.setProperty(sk, sv); else el.style[sk] = sv;
+            }
+          }
           else if (k === 'html') el.innerHTML = v;
           else if (k === 'text') el.textContent = v;
           else if (k === 'dataset') Object.assign(el.dataset, v);
@@ -82,6 +86,37 @@ window.SP = window.SP || {};
     fmtNumber(n, max = 2) {
       return new Intl.NumberFormat('es', { maximumFractionDigits: max }).format(n);
     },
+    escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    },
+    /** Quita tildes y pasa a minúsculas (para buscar) */
+    fold(s) { return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); },
+    /** Búsqueda difusa simple: puntaje > 0 si todas las letras de q aparecen en orden */
+    fuzzy(q, text) {
+      q = util.fold(q); text = util.fold(text);
+      if (!q) return 1;
+      const at = text.indexOf(q);
+      if (at >= 0) return 100 - Math.min(at, 50) + (at === 0 ? 50 : 0);
+      let i = 0; let score = 0; let prev = -2;
+      for (let j = 0; j < text.length && i < q.length; j++) {
+        if (text[j] === q[i]) { score += prev === j - 1 ? 3 : 1; prev = j; i++; }
+      }
+      return i === q.length ? score : 0;
+    },
+    /** Lee un archivo/blob como data URL */
+    readAsDataURL(blob) {
+      return new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(r.result);
+        r.onerror = () => reject(r.error);
+        r.readAsDataURL(blob);
+      });
+    },
+    async dataURLToBlob(url) { return (await fetch(url)).blob(); },
+    reducedMotion() {
+      return document.documentElement.classList.contains('lite') ||
+        (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    },
   };
 
   /* ---------- Íconos (trazos estilo línea, 24×24) ---------- */
@@ -136,6 +171,36 @@ window.SP = window.SP || {};
     back_arrow: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
     backspace: '<path d="M9 5.5h10.5a1.5 1.5 0 0 1 1.5 1.5v10a1.5 1.5 0 0 1-1.5 1.5H9L3 12z"/><path d="m12 9.5 5 5M17 9.5l-5 5"/>',
     bolt: '<path d="M13 2.5 4.5 13.5H12l-1 8 8.5-11H12z"/>',
+    undo: '<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',
+    redo: '<path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/>',
+    zoomin: '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8v6M8 11h6"/>',
+    zoomout: '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M8 11h6"/>',
+    fit: '<path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"/>',
+    folder: '<path d="M3.5 7.5a2 2 0 0 1 2-2h4l2 2.5h7a2 2 0 0 1 2 2v7.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/>',
+    calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+    rss: '<path d="M5 11a8 8 0 0 1 8 8M5 5a14 14 0 0 1 14 14"/><circle cx="6" cy="18" r="1.4" fill="currentColor" stroke="none"/>',
+    hourglass: '<path d="M6.5 3.5h11M6.5 20.5h11M7.5 3.5c0 5 9 5 9 8.5s-9 3.5-9 8.5M16.5 3.5c0 5-9 5-9 8.5s9 3.5 9 8.5"/>',
+    flame: '<path d="M12 21c-3.6 0-6.5-2.6-6.5-6.2 0-3.6 3-5.6 3.8-9.3 2 1.3 3 3.3 3 5.3 1-.7 1.7-1.8 2-3 1.6 1.6 4.2 3.8 4.2 7C18.5 18.4 15.6 21 12 21z"/>',
+    dollar: '<path d="M12 3v18M16.5 7.5c-.8-1.3-2.4-2-4.5-2-2.6 0-4.3 1.3-4.3 3.2 0 4.6 9 2.4 9 7 0 2-1.9 3.3-4.7 3.3-2.2 0-3.9-.8-4.7-2.3"/>',
+    swap: '<path d="M7 4 3.5 7.5 7 11M3.5 7.5h13M17 13l3.5 3.5L17 20M20.5 16.5h-13"/>',
+    markdown: '<rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M6 15V9l2.5 3L11 9v6M15.5 9v6M13.5 13l2 2 2-2"/>',
+    brush: '<path d="M14.5 4.5 19.5 9.5 11 18l-5-5z"/><path d="M6 13c-2 0-3 1.5-3 3.5S2 20 2 20s4 .5 5.5-1 2-2.5 1.5-3.5"/>',
+    music: '<path d="M9 17.5V5.5l11-2v12"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="15.5" r="2.5"/>',
+    ascii: '<rect x="2.5" y="4" width="19" height="16" rx="2.5"/><path d="M6.5 9l3 3-3 3M11.5 15.5h6"/>',
+    command: '<path d="M9 6v12M15 6v12M6 9h12M6 15h12"/><path d="M9 6a3 3 0 1 0-3 3M15 6a3 3 0 1 1 3 3M9 18a3 3 0 1 1-3-3M15 18a3 3 0 1 0 3-3"/>',
+    alignL: '<path d="M4 3.5v17M8 7h10v4H8zM8 13h7v4H8z"/>',
+    alignCX: '<path d="M12 3.5v17M6 7h12v4H6zM8 13h8v4H8z"/>',
+    alignR: '<path d="M20 3.5v17M6 7h10v4H6zM9 13h7v4H9z"/>',
+    alignT: '<path d="M3.5 4h17M7 8v10h4V8zM13 8v7h4V8z"/>',
+    alignCY: '<path d="M3.5 12h17M7 6v12h4V6zM13 8v8h4V8z"/>',
+    alignB: '<path d="M3.5 20h17M7 6v10h4V6zM13 9v7h4V9z"/>',
+    distH: '<path d="M4 4v16M20 4v16M9.5 8h5v8h-5z"/>',
+    distV: '<path d="M4 4h16M4 20h16M8 9.5h8v5H8z"/>',
+    layout: '<rect x="3.5" y="3.5" width="7" height="9" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="5" rx="1.5"/><rect x="13.5" y="11.5" width="7" height="9" rx="1.5"/><rect x="3.5" y="15.5" width="7" height="5" rx="1.5"/>',
+    collapse: '<path d="M6 9l6 6 6-6"/>',
+    pinned: '<path d="M9 4h6l-1 6 3 3v1.5H7V13l3-3z"/><path d="M12 14.5V20"/>',
+    cloudsync: '<path d="M7 18.5h10.5a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.6 9.1 4.75 4.75 0 0 0 7 18.5z"/><path d="M10 13.5l2-2 2 2M12 11.5v5"/>',
+    keyboard: '<rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8" stroke-width="2.2"/>',
   };
   SP.icon = function (name, size = 18) {
     return `<svg class="ico" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
@@ -153,6 +218,9 @@ window.SP = window.SP || {};
       accent: null,           // color de acento personalizado (null = el de la paleta)
       locked: false,
       snap: true,             // ajustar a cuadrícula al mover
+      guides: true,           // guías de alineación con otras notas
+      boards: [{ id: 'main', name: 'Principal', zoom: 1 }],
+      board: 'main',          // tablero visible
       gloss: 45,              // brillo tipo vidrio (0 mate – 100 liquid glass)
       opacity: 96,            // opacidad de las notas de color (60–100)
       lite: false,            // modo ligero: sin desenfoques ni animaciones
@@ -170,6 +238,17 @@ window.SP = window.SP || {};
     };
   }
 
+  /** Completa datos de versiones anteriores (tableros, etc.) */
+  function migrate(st) {
+    if (!Array.isArray(st.notes)) st.notes = [];
+    if (!Array.isArray(st.boards) || !st.boards.length) st.boards = [{ id: 'main', name: 'Principal', zoom: 1 }];
+    st.boards.forEach((b) => { if (!b.zoom) b.zoom = 1; });
+    if (!st.boards.some((b) => b.id === st.board)) st.board = st.boards[0].id;
+    const ids = new Set(st.boards.map((b) => b.id));
+    st.notes.forEach((n) => { if (!ids.has(n.board)) n.board = st.boards[0].id; });
+    return st;
+  }
+
   const store = {
     key: KEY,
     state: null,
@@ -178,7 +257,7 @@ window.SP = window.SP || {};
       try { saved = JSON.parse(localStorage.getItem(KEY)); } catch (e) { saved = null; }
       const d = defaults();
       this.state = saved && saved.v === 1 ? util.deepMerge(d, saved) : d;
-      if (!Array.isArray(this.state.notes)) this.state.notes = [];
+      migrate(this.state);
       return this.state;
     },
     saveNow() {
@@ -191,6 +270,7 @@ window.SP = window.SP || {};
     },
     replace(newState) {
       this.state = util.deepMerge(defaults(), newState);
+      migrate(this.state);
       this.saveNow();
     },
     reset() {
@@ -231,9 +311,33 @@ window.SP = window.SP || {};
     put(k, v) { return this.run('readwrite', (s) => s.put(v, k)); },
     del(k) { return this.run('readwrite', (s) => s.delete(k)); },
     clear() { return this.run('readwrite', (s) => s.clear()); },
+    keys() { return this.run('readonly', (s) => s.getAllKeys()); },
+  };
+
+  /* ---------- Archivos de las notas (imágenes, dibujos) ----------
+     Se guardan en IndexedDB con clave "img:<id>" y nunca se pisan: cada cambio
+     crea una clave nueva. Así "Deshacer" y "Duplicar" funcionan sin copiar
+     nada, y al arrancar se borran las que ya no usa ninguna nota. */
+  const media = {
+    async put(blob) {
+      const key = 'img:' + util.uid();
+      await idb.put(key, blob);
+      return key;
+    },
+    get(key) { return idb.get(key); },
+    /** Claves de imágenes que usa una nota (cada widget las declara en data.media) */
+    refs(n) { return (n.data && Array.isArray(n.data.media)) ? n.data.media : []; },
+    async gc() {
+      try {
+        const used = new Set(store.state.notes.flatMap((n) => media.refs(n)));
+        const keys = await idb.keys();
+        await Promise.all(keys.filter((k) => typeof k === 'string' && k.startsWith('img:') && !used.has(k)).map((k) => idb.del(k)));
+      } catch (e) { /* nada */ }
+    },
   };
 
   SP.util = util;
   SP.store = store;
   SP.idb = idb;
+  SP.media = media;
 })(window.SP);

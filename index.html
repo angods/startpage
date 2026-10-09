@@ -7,6 +7,8 @@
   <meta name="description" content="Startpage personal tipo tablero de sticky notes, con fondos de video, widgets y guardado local.">
   <meta name="theme-color" content="#0d0b1a">
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
@@ -35,23 +37,39 @@
 
   <!-- Tablero de notas -->
   <main id="board" aria-label="Tablero">
-    <div id="canvas"></div>
+    <div id="stage"><div id="canvas"></div></div>
   </main>
+
+  <!-- Pestañas de tableros -->
+  <nav id="boards" class="glass" role="tablist" aria-label="Tableros" hidden></nav>
 
   <!-- Barra de herramientas -->
   <nav id="toolbar" class="glass" aria-label="Herramientas">
     <button class="tb-btn tb-add" id="btn-add" title="Agregar nota (N)"></button>
+    <span class="tb-sep"></span>
+    <button class="tb-btn" id="btn-undo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer"></button>
+    <button class="tb-btn" id="btn-redo" title="Rehacer (Ctrl+Shift+Z)" aria-label="Rehacer"></button>
+    <button class="tb-btn" id="btn-cmd" title="Comandos y búsqueda (Ctrl+K)" aria-label="Paleta de comandos"></button>
     <span class="tb-sep"></span>
     <button class="tb-btn" id="btn-lock" title="Bloquear posiciones (L)"></button>
     <button class="tb-btn" id="btn-theme" title="Cambiar tema claro/oscuro (T)"></button>
     <button class="tb-btn" id="btn-settings" title="Ajustes"></button>
   </nav>
 
+  <!-- Zoom -->
+  <div id="zoombar" class="glass" role="group" aria-label="Zoom">
+    <button class="tb-btn" id="zoom-out" title="Alejar (Ctrl −)" aria-label="Alejar"></button>
+    <button class="tb-btn zoom-pct" id="zoom-pct" title="Volver al 100% (Ctrl 0)">100%</button>
+    <button class="tb-btn" id="zoom-in" title="Acercar (Ctrl +)" aria-label="Acercar"></button>
+    <button class="tb-btn" id="zoom-fit" title="Ver todo (F)" aria-label="Ver todo el tablero"></button>
+  </div>
+
   <div id="toasts" aria-live="polite"></div>
 
   <!-- Scripts en orden; "defer" no bloquea el primer pintado -->
   <script defer src="js/core.js"></script>
   <script defer src="js/ui.js"></script>
+  <script defer src="js/history.js"></script>
   <script defer src="js/fonts.js"></script>
   <script defer src="js/sound.js"></script>
   <script defer src="js/theme.js"></script>
@@ -63,8 +81,22 @@
   <script defer src="js/widgets/pomodoro.js"></script>
   <script defer src="js/widgets/youtube.js"></script>
   <script defer src="js/widgets/calculator.js"></script>
+  <script defer src="js/widgets/ascii.js"></script>
+  <script defer src="js/widgets/folder.js"></script>
+  <script defer src="js/widgets/markdown.js"></script>
+  <script defer src="js/widgets/calendar.js"></script>
+  <script defer src="js/widgets/countdown.js"></script>
+  <script defer src="js/widgets/habits.js"></script>
+  <script defer src="js/widgets/rss.js"></script>
+  <script defer src="js/widgets/rates.js"></script>
+  <script defer src="js/widgets/converter.js"></script>
+  <script defer src="js/widgets/draw.js"></script>
+  <script defer src="js/widgets/image.js"></script>
+  <script defer src="js/widgets/ambient.js"></script>
   <script defer src="js/background.js"></script>
   <script defer src="js/settings.js"></script>
+  <script defer src="js/sync.js"></script>
+  <script defer src="js/palette.js"></script>
   <script defer src="js/app.js"></script>
 </body>
 </html>
