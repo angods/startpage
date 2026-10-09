@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Startpage</title>
+  <meta name="description" content="Startpage personal tipo tablero de sticky notes, con fondos de video, widgets y guardado local.">
+  <meta name="theme-color" content="#0d0b1a">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    /* Aplica el tema guardado antes de pintar, para evitar parpadeos */
+    try {
+      var s = JSON.parse(localStorage.getItem('startpage:v1') || 'null');
+      var t = s && s.theme ? s.theme : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.dataset.theme = t;
+      if (s && s.locked) document.documentElement.classList.add('locked');
+      if (s && s.lite) document.documentElement.classList.add('lite');
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <!-- Fondo: aurora animada por defecto, o tu video -->
+  <div id="bg" aria-hidden="true">
+    <div id="aurora">
+      <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="blob b4"></span>
+    </div>
+    <video id="bg-video" muted loop playsinline autoplay preload="auto"></video>
+    <div id="bg-tint"></div>
+    <div id="bg-grain"></div>
+  </div>
+
+  <!-- Tablero de notas -->
+  <main id="board" aria-label="Tablero">
+    <div id="canvas"></div>
+  </main>
+
+  <!-- Barra de herramientas -->
+  <nav id="toolbar" class="glass" aria-label="Herramientas">
+    <button class="tb-btn tb-add" id="btn-add" title="Agregar nota (N)"></button>
+    <span class="tb-sep"></span>
+    <button class="tb-btn" id="btn-lock" title="Bloquear posiciones (L)"></button>
+    <button class="tb-btn" id="btn-theme" title="Cambiar tema claro/oscuro (T)"></button>
+    <button class="tb-btn" id="btn-settings" title="Ajustes"></button>
+  </nav>
+
+  <div id="toasts" aria-live="polite"></div>
+
+  <!-- Scripts en orden; "defer" no bloquea el primer pintado -->
+  <script defer src="js/core.js"></script>
+  <script defer src="js/ui.js"></script>
+  <script defer src="js/fonts.js"></script>
+  <script defer src="js/sound.js"></script>
+  <script defer src="js/theme.js"></script>
+  <script defer src="js/board.js"></script>
+  <script defer src="js/widgets/basic.js"></script>
+  <script defer src="js/widgets/link.js"></script>
+  <script defer src="js/widgets/weather.js"></script>
+  <script defer src="js/widgets/sheet.js"></script>
+  <script defer src="js/widgets/pomodoro.js"></script>
+  <script defer src="js/widgets/youtube.js"></script>
+  <script defer src="js/widgets/calculator.js"></script>
+  <script defer src="js/background.js"></script>
+  <script defer src="js/settings.js"></script>
+  <script defer src="js/app.js"></script>
+</body>
+</html>
