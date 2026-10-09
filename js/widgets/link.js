@@ -58,6 +58,7 @@
     color: 'glass',
     headless: true,
     create: (o) => ({ url: o.url || '', icon: o.icon || '', newTab: !!o.newTab }),
+    text: (n) => n.data.url,
     render(body, n, ctx) {
       const a = h('a', {
         class: 'link-tile',
@@ -89,5 +90,8 @@
     },
   });
 
-  SP.link = { prompt, prettyName };
+  /** Ícono para un acceso suelto {url, title, icon} (lo usan las carpetas) */
+  const iconFor = (l) => iconEl({ title: l.title, data: { url: l.url, icon: l.icon } });
+
+  SP.link = { prompt, prettyName, iconFor, faviconFor };
 })(window.SP);

@@ -14,6 +14,7 @@
     min: [150, 100],
     color: 'yellow',
     create: (o) => ({ text: o.text || '', hand: !!o.hand }),
+    text: (n) => n.data.text,
     render(body, n, ctx) {
       const ta = h('textarea', {
         class: 'note-text' + (n.data.hand ? ' hand' : ''),
@@ -41,6 +42,7 @@
     min: [180, 140],
     color: 'lavender',
     create: (o) => ({ items: (o.items || []).map((t) => ({ id: SP.util.uid(), text: t, done: false })) }),
+    text: (n) => n.data.items.map((i) => i.text).join(' '),
     render(body, n, ctx) {
       const list = h('ul', { class: 'todo-list' });
       const draw = () => {
@@ -49,19 +51,30 @@
             h('button', {
               class: 'todo-check', type: 'button', 'aria-label': it.done ? 'Marcar pendiente' : 'Marcar hecha',
               html: SP.icon('check', 12),
-              onclick: () => { it.done = !it.done; ctx.save(); draw(); },
+              onclick: (e) => {
+                const at = e.currentTarget.getBoundingClientRect();
+                it.done = !it.done; ctx.save(); draw();
+                // Festejo chiquito al terminar todas
+                if (it.done && n.data.items.length > 1 && n.data.items.every((x) => x.done)) SP.ui.confetti(ctx.el);
+                else if (it.done) SP.ui.burst(at);
+              },
             }),
             h('span', {
               class: 'todo-text', text: it.text, title: 'Doble clic para editar',
               ondblclick: (e) => {
                 const sp = e.currentTarget;
                 sp.contentEditable = 'true'; sp.focus();
+                const onKey = (ev) => {
+                  if (ev.key === 'Enter') { ev.preventDefault(); sp.blur(); }
+                  if (ev.key === 'Escape') { ev.preventDefault(); sp.textContent = it.text; sp.blur(); }
+                };
                 const fin = () => {
+                  sp.removeEventListener('keydown', onKey);
                   sp.contentEditable = 'false';
                   it.text = sp.textContent.trim() || it.text; ctx.save(); draw();
                 };
                 sp.addEventListener('blur', fin, { once: true });
-                sp.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); sp.blur(); } });
+                sp.addEventListener('keydown', onKey);
               },
             }),
             h('button', {

@@ -156,8 +156,11 @@
 
       section('Tablero',
         toggleRow('Ajustar a la cuadrícula', s.snap, (on) => { s.snap = on; SP.store.save(); }, 'Muestra una cuadrícula al mover las notas y las acomoda en ella'),
+        toggleRow('Guías de alineación', s.guides, (on) => { s.guides = on; SP.store.save(); }, 'Líneas que aparecen al alinear una nota con otra'),
         toggleRow('Bloquear posiciones', s.locked, (on) => { SP.board.setLocked(on); }, 'También con el candado de arriba'),
         toggleRow('Modo ligero', s.lite, (on) => { s.lite = on; SP.store.save(); SP.theme.applyLook(); }, 'Sin desenfoques ni animaciones: ideal para PCs modestas')),
+
+      SP.sync ? SP.sync.section() : null,
 
       section('Tus datos',
         h('p', { class: 'set-hint', text: 'Todo se guarda automáticamente en este navegador. Exportá una copia para pasarla a otra computadora.' }),
@@ -171,18 +174,35 @@
         h('span', null, h('kbd', { text: 'N' }), ' nueva nota'),
         h('span', null, h('kbd', { text: 'L' }), ' candado'),
         h('span', null, h('kbd', { text: 'T' }), ' tema'),
-        h('span', null, h('kbd', { text: 'Ctrl' }), '+', h('kbd', { text: 'V' }), ' pegar enlace')));
+        h('span', null, h('kbd', { text: 'Ctrl' }), '+', h('kbd', { text: 'K' }), ' comandos'),
+        h('span', null, h('kbd', { text: 'Ctrl' }), '+', h('kbd', { text: 'Z' }), ' deshacer'),
+        h('button', { type: 'button', class: 'linkish', text: 'Ver todos los atajos', onclick: () => SP.app.showShortcuts() })));
 
     panel.querySelector('.set-body').replaceChildren(content);
     content.scrollTop = scrollTop;
   }
 
-  function exportData() {
-    const blob = new Blob([JSON.stringify(S(), null, 2)], { type: 'application/json' });
+  /** Copia de seguridad: notas, ajustes y las imágenes/dibujos de las notas */
+  async function exportData() {
+    const data = JSON.parse(JSON.stringify(S()));
+    const media = {};
+    for (const key of new Set(data.notes.flatMap((n) => SP.media.refs(n)))) {
+      try { const b = await SP.media.get(key); if (b) media[key] = await SP.util.readAsDataURL(b); } catch (e) { /* nada */ }
+    }
+    if (Object.keys(media).length) data.media = media;
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const a = h('a', { href: URL.createObjectURL(blob), download: `startpage-${new Date().toISOString().slice(0, 10)}.json` });
     document.body.append(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    SP.ui.toast('Copia exportada (los videos subidos no se incluyen)');
+    SP.ui.toast('Copia exportada (los videos de fondo subidos no se incluyen)');
+  }
+
+  /** Guarda en IndexedDB las imágenes que vienen dentro de una copia */
+  async function restoreMedia(media) {
+    if (!media) return;
+    for (const [key, url] of Object.entries(media)) {
+      try { await SP.idb.put(key, await SP.util.dataURLToBlob(url)); } catch (e) { /* nada */ }
+    }
   }
 
   async function moveData() {
@@ -201,9 +221,9 @@
       try {
         const data = JSON.parse(await input.files[0].text());
         if (!data || data.v !== 1 || !Array.isArray(data.notes)) throw new Error('formato');
-        SP.store.replace(data);
-        SP.theme.apply(); SP.board.renderAll(); SP.board.setLocked(S().locked, { silent: true }); SP.background.refresh();
-        render();
+        await restoreMedia(data.media);
+        delete data.media;
+        SP.app.replaceState(data);
         SP.ui.toast('Datos importados');
       } catch (e) { SP.ui.toast('Ese archivo no es una copia válida'); }
     });
@@ -251,5 +271,5 @@
 
   document.addEventListener('sp:theme', () => render());
 
-  SP.settings = { open, close, render };
+  SP.settings = { open, close, render, exportData, section, toggleRow };
 })(window.SP);
