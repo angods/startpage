@@ -249,6 +249,49 @@ body:not(.ready) .note { opacity: 0; }
 }
 .note:hover .note-resize { opacity: .8; }
 
+/* Cuadrícula guía al mover / redimensionar (más marcada cerca de la nota) */
+#grid-guide {
+  --line: color-mix(in srgb, var(--ui-text) 13%, transparent);
+  --line-major: color-mix(in srgb, var(--ui-text) 24%, transparent);
+  --major: calc(var(--grid) * 5);
+  position: absolute; inset: 0; z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--line-major) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line-major) 1px, transparent 1px),
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: var(--major) var(--major), var(--major) var(--major), var(--grid) var(--grid), var(--grid) var(--grid);
+  -webkit-mask-image: radial-gradient(circle 520px at var(--fx, 50%) var(--fy, 50%), #000 0%, rgba(0, 0, 0, .35) 70%, rgba(0, 0, 0, .18) 100%);
+  mask-image: radial-gradient(circle 520px at var(--fx, 50%) var(--fy, 50%), #000 0%, rgba(0, 0, 0, .35) 70%, rgba(0, 0, 0, .18) 100%);
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+#grid-guide.on { opacity: 1; }
+
+/* Sombra del lugar donde va a quedar la nota */
+.drop-ghost {
+  position: absolute; top: 0; left: 0;
+  pointer-events: none;
+  border: 2px dashed color-mix(in srgb, var(--accent) 80%, transparent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 10%, transparent);
+  opacity: 0;
+  transition: transform .12s ease-out, width .12s ease-out, height .12s ease-out, opacity .15s ease, border-color .15s, background-color .15s;
+}
+.drop-ghost.on { opacity: 1; }
+/* Se pisa con otra nota: aviso suave (igual se puede soltar) */
+.drop-ghost.overlap {
+  border-color: color-mix(in srgb, var(--danger) 75%, transparent);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--danger) 10%, transparent);
+}
+.note.settling {
+  transition: transform .24s cubic-bezier(.2, .9, .3, 1.15), width .24s cubic-bezier(.2, .9, .3, 1.15), height .24s cubic-bezier(.2, .9, .3, 1.15),
+    box-shadow .2s ease, opacity .25s ease, scale .2s ease, background-color .5s ease, color .5s ease;
+}
+.lite #grid-guide, .lite .drop-ghost, .lite .note.settling { transition: none; }
+
 body.is-dragging, body.is-dragging * { user-select: none !important; }
 body.is-dragging iframe { pointer-events: none; }
 body.is-resizing { cursor: nwse-resize; }

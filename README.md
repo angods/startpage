@@ -18,6 +18,7 @@ Sin frameworks, sin build, sin dependencias: HTML + CSS + JavaScript puro.
 | ✅ **Tareas**, 🕐 **Reloj**, 🔍 **Buscador** | Extras para completar el escritorio |
 
 - **Apilar y ordenar:** clic en una nota la trae al frente; desde el menú `⋯` podés enviarla atrás, duplicarla o borrarla (con *Deshacer*).
+- **Cuadrícula guía:** al mover o redimensionar una nota aparece una cuadrícula y una sombra con el lugar exacto donde va a quedar (se pone roja si pisa otra nota). Al soltarla, se acomoda sola. Se desactiva en *Ajustes → Ajustar a la cuadrícula*.
 - **Candado 🔒:** fija todas las posiciones para que nada se mueva por accidente.
 - **Claro / oscuro:** cambia notas, interfaz y también el video (lo oscurece o aclara con un velo regulable).
 - **Paletas:** Aurora, Atardecer, Océano, Bosque, Sakura y Grafito, más un color de acento a elección.

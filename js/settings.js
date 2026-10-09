@@ -155,7 +155,7 @@
         h('p', { class: 'set-hint', text: 'El tema oscuro oscurece el video y el claro lo aclara; el velo controla cuánto.' })),
 
       section('Tablero',
-        toggleRow('Ajustar a la cuadrícula', s.snap, (on) => { s.snap = on; SP.store.save(); }, 'Alinea las notas al moverlas'),
+        toggleRow('Ajustar a la cuadrícula', s.snap, (on) => { s.snap = on; SP.store.save(); }, 'Muestra una cuadrícula al mover las notas y las acomoda en ella'),
         toggleRow('Bloquear posiciones', s.locked, (on) => { SP.board.setLocked(on); }, 'También con el candado de arriba'),
         toggleRow('Modo ligero', s.lite, (on) => { s.lite = on; SP.store.save(); SP.theme.applyLook(); }, 'Sin desenfoques ni animaciones: ideal para PCs modestas')),
 
