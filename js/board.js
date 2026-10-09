@@ -8,7 +8,7 @@
   'use strict';
   const { h, clamp } = SP.util;
 
-  const GRID = 10;
+  const GRID = 20;
   const widgets = {};
   const views = new Map(); // id -> { el, body, cleanup, ctx }
   let canvas = null;
@@ -95,6 +95,55 @@
     canvas.style.height = Math.max(hgt + 40, innerHeight) + 'px';
   }
 
+  /* ---------- Cuadrícula guía ----------
+     Mientras se mueve o redimensiona una nota se muestra la cuadrícula y una
+     "sombra" con el lugar exacto donde va a quedar. La nota sigue al puntero
+     libremente y, al soltarla, se acomoda en la sombra. */
+  let gridEl = null;
+  let ghostEl = null;
+
+  function guideOn(n, el) {
+    if (!state().snap) return false;
+    if (!gridEl) gridEl = h('div', { id: 'grid-guide', 'aria-hidden': 'true' });
+    if (!ghostEl) ghostEl = h('div', { class: 'drop-ghost', 'aria-hidden': 'true' });
+    gridEl.style.setProperty('--grid', GRID + 'px');
+    ghostEl.style.borderRadius = getComputedStyle(el).borderRadius;
+    // Mismo z que la nota y justo antes en el DOM: queda sobre las demás
+    // notas pero debajo de la que se está moviendo
+    ghostEl.style.zIndex = n.z;
+    canvas.prepend(gridEl);
+    el.before(ghostEl);
+    // Fuerza un frame para que la transición de entrada se vea
+    void gridEl.offsetWidth;
+    gridEl.classList.add('on');
+    ghostEl.classList.add('on');
+    return true;
+  }
+
+  function guideMove(n, g) {
+    if (!ghostEl) return;
+    ghostEl.style.transform = `translate(${g.x}px, ${g.y}px)`;
+    ghostEl.style.width = g.w + 'px';
+    ghostEl.style.height = g.h + 'px';
+    const hit = notes().some((o) => o !== n && overlaps(g, o, 0));
+    ghostEl.classList.toggle('overlap', hit);
+    // Centro del "foco" de la cuadrícula: alrededor de la nota
+    gridEl.style.setProperty('--fx', (g.x + g.w / 2) + 'px');
+    gridEl.style.setProperty('--fy', (g.y + g.h / 2) + 'px');
+  }
+
+  function guideOff() {
+    if (gridEl) gridEl.classList.remove('on');
+    if (ghostEl) { ghostEl.classList.remove('on', 'overlap'); ghostEl.remove(); }
+  }
+
+  /* Al soltar, la nota se desliza suavemente hasta su lugar en la cuadrícula */
+  function settle(el) {
+    el.classList.add('settling');
+    clearTimeout(el._settleT);
+    el._settleT = setTimeout(() => el.classList.remove('settling'), 260);
+  }
+
   /* ---------- Arrastrar ---------- */
   const INTERACTIVE = 'button, input, textarea, select, iframe, [contenteditable="true"], .no-drag';
 
@@ -104,28 +153,43 @@
     e.preventDefault();
     const sx = e.clientX; const sy = e.clientY; const ox = n.x; const oy = n.y;
     let moved = false;
+    let guided = false;
+    // Posición libre (sin ajustar) que sigue al puntero
+    let fx = ox; let fy = oy;
 
+    const paint = () => {
+      raf = 0;
+      el.style.transform = `translate(${fx}px, ${fy}px)`;
+      if (guided) guideMove(n, n);
+    };
     const move = (ev) => {
       const dx = ev.clientX - sx; const dy = ev.clientY - sy;
       if (!moved) {
         if (Math.hypot(dx, dy) < 4) return;
         moved = true;
+        el.classList.remove('settling');
         el.classList.add('dragging');
         document.body.classList.add('is-dragging');
+        guided = guideOn(n, el);
       }
-      n.x = Math.max(0, snap(ox + dx));
-      n.y = Math.max(0, snap(oy + dy));
-      if (!raf) raf = requestAnimationFrame(() => { raf = 0; applyGeom(el, n); });
+      fx = Math.max(0, ox + dx);
+      fy = Math.max(0, oy + dy);
+      n.x = Math.max(0, snap(fx));
+      n.y = Math.max(0, snap(fy));
+      if (!guided) { fx = n.x; fy = n.y; }
+      if (!raf) raf = requestAnimationFrame(paint);
     };
     let raf = 0;
     const end = () => {
-      if (raf) { cancelAnimationFrame(raf); raf = 0; applyGeom(el, n); }
+      if (raf) { cancelAnimationFrame(raf); raf = 0; }
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', end);
       window.removeEventListener('pointercancel', end);
       if (moved) {
         el.classList.remove('dragging');
         document.body.classList.remove('is-dragging');
+        if (guided) { guideOff(); settle(el); }
+        applyGeom(el, n);
         el._justDragged = true;
         setTimeout(() => { el._justDragged = false; }, 0);
         updateCanvasSize();
@@ -145,24 +209,39 @@
     const sx = e.clientX; const sy = e.clientY; const ow = n.w; const oh = n.h;
     const [minW, minH] = W.min || [120, 80];
     document.body.classList.add('is-dragging', 'is-resizing');
+    el.classList.remove('settling');
     el.classList.add('resizing');
+    const guided = guideOn(n, el);
+    if (guided) guideMove(n, n);
+    let fw = ow; let fh = oh;
+    const paint = () => {
+      raf = 0;
+      el.style.width = fw + 'px';
+      el.style.height = fh + 'px';
+      if (guided) guideMove(n, n);
+    };
     const move = (ev) => {
-      n.w = Math.max(minW, snap(ow + ev.clientX - sx));
-      n.h = Math.max(minH, snap(oh + ev.clientY - sy));
-      if (!raf) raf = requestAnimationFrame(() => { raf = 0; applyGeom(el, n); });
+      fw = Math.max(minW, ow + ev.clientX - sx);
+      fh = Math.max(minH, oh + ev.clientY - sy);
+      n.w = Math.max(minW, snap(fw));
+      n.h = Math.max(minH, snap(fh));
+      if (!guided) { fw = n.w; fh = n.h; }
+      if (!raf) raf = requestAnimationFrame(paint);
     };
     let raf = 0;
     const end = () => {
-      if (raf) { cancelAnimationFrame(raf); raf = 0; applyGeom(el, n); }
+      if (raf) { cancelAnimationFrame(raf); raf = 0; }
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', end);
       window.removeEventListener('pointercancel', end);
       document.body.classList.remove('is-dragging', 'is-resizing');
       el.classList.remove('resizing');
+      if (guided) { guideOff(); settle(el); }
+      applyGeom(el, n);
       updateCanvasSize();
       SP.store.save();
       const v = views.get(n.id);
-      if (v && v.ctx.onResize) v.ctx.onResize();
+      if (v && v.ctx.onResize) setTimeout(v.ctx.onResize, guided ? 260 : 0);
     };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', end);
