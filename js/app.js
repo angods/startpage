@@ -26,6 +26,7 @@
     { cat: 'Tiempo', type: 'habits', icon: 'flame', label: 'Hábitos', desc: 'Rachas diarias' },
     { cat: 'Info', type: 'weather', icon: 'cloud', label: 'Clima', desc: 'Elegí tu ciudad' },
     { cat: 'Info', type: 'rss', icon: 'rss', label: 'Noticias (RSS)', desc: 'Titulares de un sitio' },
+    { cat: 'Info', type: 'wikipedia', icon: 'book', label: 'Wikipedia', desc: 'Un artículo al azar' },
     { cat: 'Info', type: 'rates', icon: 'dollar', label: 'Cotizaciones', desc: 'Dólar y cripto' },
     { cat: 'Info', type: 'converter', icon: 'swap', label: 'Conversor', desc: 'Unidades y monedas' },
     { cat: 'Herramientas', type: 'sheet', icon: 'table', label: 'Planilla', desc: 'Tabla con fórmulas' },
